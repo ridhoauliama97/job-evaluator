@@ -204,8 +204,16 @@ const Index = () => {
       <footer className="border-t border-border mt-12 sm:mt-20">
         <div className="container mx-auto px-3 sm:px-4 py-6 sm:py-8">
           <p className="text-center text-xs sm:text-sm text-muted-foreground">
-            PSI Decision Support System © {new Date().getFullYear()} • Built
-            with precision and care
+            PSI Decision Support System &copy; {new Date().getFullYear()} •
+            Built with precision, care and ❤️ by{" "}
+            <a
+              href="https://next-portfolio-ridhoauliama97.vercel.app/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-primary font-semibold"
+            >
+              Ridho Aulia Mahqoma Angkat
+            </a>
           </p>
         </div>
       </footer>
