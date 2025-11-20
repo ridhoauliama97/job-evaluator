@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { Skeleton } from "@/components/ui/skeleton";
 import {
   Card,
   CardContent,
@@ -38,6 +39,16 @@ export const JobAlternativesForm = ({
       values: {},
     },
   ]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const loadCriteria = async () => {
+      // Simulate loading for better UX
+      await new Promise((resolve) => setTimeout(resolve, 300));
+      setIsLoading(false);
+    };
+    loadCriteria();
+  }, []);
 
   const addAlternative = () => {
     setAlternatives([
@@ -148,6 +159,37 @@ export const JobAlternativesForm = ({
   const isValid = alternatives.every(
     (alt) => alt.name && Object.keys(alt.values).length === CRITERIA_DATA.length
   );
+
+  if (isLoading) {
+    return (
+      <Card className="shadow-medium">
+        <CardHeader>
+          <div className="flex items-center gap-3">
+            <Skeleton className="w-10 h-10 rounded-full" />
+            <div className="flex-1 space-y-2">
+              <Skeleton className="h-6 w-40" />
+              <Skeleton className="h-4 w-64" />
+            </div>
+          </div>
+        </CardHeader>
+        <CardContent className="space-y-6">
+          {[1, 2].map((i) => (
+            <div
+              key={i}
+              className="space-y-4 p-4 border border-border rounded-lg"
+            >
+              <Skeleton className="h-10 w-full" />
+              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
+                {[1, 2, 3, 4, 5, 6].map((j) => (
+                  <Skeleton key={j} className="h-20 w-full" />
+                ))}
+              </div>
+            </div>
+          ))}
+        </CardContent>
+      </Card>
+    );
+  }
 
   return (
     <div className="space-y-6">

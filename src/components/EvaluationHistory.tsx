@@ -9,6 +9,8 @@ import { Button } from "@/components/ui/button";
 import { EvaluationHistory as EvaluationHistoryType } from "@/types/psi";
 import { History, Trash2, Eye } from "lucide-react";
 import { format } from "date-fns";
+import { Skeleton } from "@/components/ui/skeleton";
+import { useState, useEffect } from "react";
 
 interface EvaluationHistoryProps {
   history: EvaluationHistoryType[];
@@ -21,8 +23,53 @@ export const EvaluationHistory = ({
   onView,
   onDelete,
 }: EvaluationHistoryProps) => {
-  if (history.length === 0) {
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsLoading(false);
+    }, 300);
+    return () => clearTimeout(timer);
+  }, []);
+
+  if (history.length === 0 && !isLoading) {
     return null;
+  }
+
+  if (isLoading) {
+    return (
+      <Card className="shadow-medium">
+        <CardHeader>
+          <div className="flex items-center gap-3">
+            <Skeleton className="w-10 h-10 rounded-full" />
+            <div className="space-y-2">
+              <Skeleton className="h-6 w-40" />
+              <Skeleton className="h-4 w-56" />
+            </div>
+          </div>
+        </CardHeader>
+        <CardContent>
+          <div className="space-y-3">
+            {[1, 2, 3].map((i) => (
+              <div
+                key={i}
+                className="flex items-center justify-between gap-3 p-4 rounded-lg border border-border"
+              >
+                <div className="flex-1 space-y-2">
+                  <Skeleton className="h-5 w-32" />
+                  <Skeleton className="h-4 w-48" />
+                  <Skeleton className="h-4 w-40" />
+                </div>
+                <div className="flex gap-2">
+                  <Skeleton className="h-9 w-20" />
+                  <Skeleton className="h-9 w-20" />
+                </div>
+              </div>
+            ))}
+          </div>
+        </CardContent>
+      </Card>
+    );
   }
 
   return (

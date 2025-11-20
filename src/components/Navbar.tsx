@@ -19,10 +19,10 @@ export const Navbar = () => {
             </div>
             <div className="min-w-0">
               <h1 className="text-base sm:text-xl font-bold text-foreground truncate">
-                PSI Decision Support
+                Job Evaluator
               </h1>
               <p className="text-[10px] sm:text-xs text-muted-foreground hidden sm:block">
-                Job Alternative Evaluator
+                PSI Decision Support
               </p>
             </div>
           </Link>

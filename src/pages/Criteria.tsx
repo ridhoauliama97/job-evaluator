@@ -34,7 +34,9 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
-import { Plus, Pencil, Trash2, Save, X } from "lucide-react";
+import { Plus, Pencil, Trash2, Save, X, AlertCircle } from "lucide-react";
+import { Skeleton } from "@/components/ui/skeleton";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 import type { Criteria, CriteriaOption, CriteriaType } from "@/types/psi";
 import { CRITERIA_DATA } from "@/data/criteriaData";
 import { toast } from "sonner";
@@ -43,15 +45,23 @@ const Criteria = () => {
   const [criteria, setCriteria] = useState<Criteria[]>([]);
   const [editingCriteria, setEditingCriteria] = useState<Criteria | null>(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  const [selectedIds, setSelectedIds] = useState<string[]>([]);
 
   useEffect(() => {
-    const savedCriteria = localStorage.getItem("criteria");
-    if (savedCriteria) {
-      setCriteria(JSON.parse(savedCriteria));
-    } else {
-      setCriteria(CRITERIA_DATA);
-      localStorage.setItem("criteria", JSON.stringify(CRITERIA_DATA));
-    }
+    const loadCriteria = async () => {
+      // Simulate loading for better UX
+      await new Promise((resolve) => setTimeout(resolve, 300));
+      const savedCriteria = localStorage.getItem("criteria");
+      if (savedCriteria) {
+        setCriteria(JSON.parse(savedCriteria));
+      } else {
+        setCriteria(CRITERIA_DATA);
+        localStorage.setItem("criteria", JSON.stringify(CRITERIA_DATA));
+      }
+      setIsLoading(false);
+    };
+    loadCriteria();
   }, []);
 
   const saveCriteria = (newCriteria: Criteria[]) => {
@@ -145,7 +155,35 @@ const Criteria = () => {
       confirm("Are you sure you want to reset all criteria to default values?")
     ) {
       saveCriteria(CRITERIA_DATA);
+      setSelectedIds([]);
       toast.success("Criteria reset to default");
+    }
+  };
+
+  const handleToggleSelect = (id: string) => {
+    setSelectedIds((prev) =>
+      prev.includes(id) ? prev.filter((i) => i !== id) : [...prev, id]
+    );
+  };
+
+  const handleSelectAll = () => {
+    if (selectedIds.length === criteria.length) {
+      setSelectedIds([]);
+    } else {
+      setSelectedIds(criteria.map((c) => c.id));
+    }
+  };
+
+  const handleBulkDelete = () => {
+    if (selectedIds.length === 0) return;
+
+    if (
+      confirm(`Are you sure you want to delete ${selectedIds.length} criteria?`)
+    ) {
+      const newCriteria = criteria.filter((c) => !selectedIds.includes(c.id));
+      saveCriteria(newCriteria);
+      setSelectedIds([]);
+      toast.success(`${selectedIds.length} criteria deleted successfully`);
     }
   };
 
@@ -166,6 +204,21 @@ const Criteria = () => {
       updateEditingCriteria({ options: newOptions });
     }
   };
+
+  const checkIdExists = (id: string): boolean => {
+    if (!editingCriteria) return false;
+    const existingIndex = criteria.findIndex(
+      (c) => c.id === editingCriteria.id
+    );
+    return criteria.some((c, index) => c.id === id && index !== existingIndex);
+  };
+
+  const idError =
+    editingCriteria &&
+    editingCriteria.id.trim() &&
+    checkIdExists(editingCriteria.id)
+      ? `ID "${editingCriteria.id}" is already in use`
+      : "";
 
   return (
     <div className="min-h-screen bg-background">
@@ -201,67 +254,128 @@ const Criteria = () => {
             </div>
           </div>
 
+          {selectedIds.length > 0 && (
+            <Card className="mb-4 border-primary">
+              <CardContent className="py-3">
+                <div className="flex items-center justify-between">
+                  <p className="text-sm font-medium">
+                    {selectedIds.length}{" "}
+                    {selectedIds.length === 1 ? "criteria" : "criteria"}{" "}
+                    selected
+                  </p>
+                  <Button
+                    onClick={handleBulkDelete}
+                    variant="destructive"
+                    size="sm"
+                  >
+                    <Trash2 className="mr-2 h-4 w-4" />
+                    Delete Selected
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+          )}
+
           <Card>
             <CardHeader>
               <CardTitle>Criteria List</CardTitle>
               <CardDescription>
-                Total criteria: {criteria.length}
+                {isLoading ? (
+                  <Skeleton className="h-4 w-32" />
+                ) : (
+                  `Total criteria: ${criteria.length}`
+                )}
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="overflow-x-auto -mx-3 sm:mx-0">
-                <Table>
-                  <TableHeader>
-                    <TableRow>
-                      <TableHead className="min-w-[60px]">ID</TableHead>
-                      <TableHead className="min-w-[150px]">Name</TableHead>
-                      <TableHead className="min-w-[80px]">Type</TableHead>
-                      <TableHead className="min-w-[80px]">Options</TableHead>
-                      <TableHead className="text-right min-w-[120px]">
-                        Actions
-                      </TableHead>
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    {criteria.map((c) => (
-                      <TableRow key={c.id}>
-                        <TableCell className="font-medium">{c.id}</TableCell>
-                        <TableCell>{c.name}</TableCell>
-                        <TableCell>
-                          <Badge
-                            variant={
-                              c.type === "Benefit" ? "default" : "secondary"
+              {isLoading ? (
+                <div className="space-y-3">
+                  {[1, 2, 3, 4, 5].map((i) => (
+                    <div key={i} className="flex items-center gap-4">
+                      <Skeleton className="h-10 w-16" />
+                      <Skeleton className="h-10 flex-1" />
+                      <Skeleton className="h-10 w-20" />
+                      <Skeleton className="h-10 w-24" />
+                      <Skeleton className="h-10 w-28" />
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <div className="overflow-x-auto -mx-3 sm:mx-0">
+                  <Table>
+                    <TableHeader>
+                      <TableRow>
+                        <TableHead className="w-[50px]">
+                          <input
+                            type="checkbox"
+                            checked={
+                              selectedIds.length === criteria.length &&
+                              criteria.length > 0
                             }
-                          >
-                            {c.type}
-                          </Badge>
-                        </TableCell>
-                        <TableCell className="text-sm text-muted-foreground">
-                          {c.options.length} options
-                        </TableCell>
-                        <TableCell className="text-right">
-                          <div className="flex justify-end gap-2">
-                            <Button
-                              size="sm"
-                              variant="outline"
-                              onClick={() => handleEditCriteria(c)}
-                            >
-                              <Pencil className="h-4 w-4" />
-                            </Button>
-                            <Button
-                              size="sm"
-                              variant="outline"
-                              onClick={() => handleDeleteCriteria(c.id)}
-                            >
-                              <Trash2 className="h-4 w-4" />
-                            </Button>
-                          </div>
-                        </TableCell>
+                            onChange={handleSelectAll}
+                            className="cursor-pointer w-4 h-4"
+                          />
+                        </TableHead>
+                        <TableHead className="min-w-[60px]">ID</TableHead>
+                        <TableHead className="min-w-[150px]">Name</TableHead>
+                        <TableHead className="min-w-[80px]">Type</TableHead>
+                        <TableHead className="min-w-[80px]">Options</TableHead>
+                        <TableHead className="text-right min-w-[120px]">
+                          Actions
+                        </TableHead>
                       </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-              </div>
+                    </TableHeader>
+                    <TableBody>
+                      {criteria.map((c) => (
+                        <TableRow key={c.id}>
+                          <TableCell>
+                            <input
+                              type="checkbox"
+                              checked={selectedIds.includes(c.id)}
+                              onChange={() => handleToggleSelect(c.id)}
+                              className="cursor-pointer w-4 h-4"
+                            />
+                          </TableCell>
+                          <TableCell className="font-medium">{c.id}</TableCell>
+                          <TableCell>{c.name}</TableCell>
+                          <TableCell>
+                            <Badge
+                              variant={
+                                c.type === "Benefit" ? "default" : "secondary"
+                              }
+                            >
+                              {c.type}
+                            </Badge>
+                          </TableCell>
+                          <TableCell className="text-sm text-muted-foreground">
+                            {c.options.length} options
+                          </TableCell>
+                          <TableCell className="text-right">
+                            <div className="flex justify-end gap-2">
+                              <Button
+                                size="sm"
+                                variant="outline"
+                                onClick={() => handleEditCriteria(c)}
+                                title="Edit"
+                              >
+                                <Pencil className="h-4 w-4" />
+                              </Button>
+                              <Button
+                                size="sm"
+                                variant="outline"
+                                onClick={() => handleDeleteCriteria(c.id)}
+                                title="Delete"
+                              >
+                                <Trash2 className="h-4 w-4" />
+                              </Button>
+                            </div>
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </div>
+              )}
             </CardContent>
           </Card>
         </div>
@@ -292,7 +406,20 @@ const Criteria = () => {
                       updateEditingCriteria({ id: e.target.value })
                     }
                     placeholder="e.g., C1"
+                    className={
+                      idError
+                        ? "border-destructive focus-visible:ring-destructive"
+                        : ""
+                    }
                   />
+                  {idError && (
+                    <Alert variant="destructive" className="py-2">
+                      <AlertCircle className="h-4 w-4" />
+                      <AlertDescription className="text-xs">
+                        {idError}
+                      </AlertDescription>
+                    </Alert>
+                  )}
                 </div>
                 <div className="space-y-2">
                   <Label>Type</Label>
@@ -386,7 +513,7 @@ const Criteria = () => {
                 >
                   Cancel
                 </Button>
-                <Button onClick={handleSaveCriteria}>
+                <Button onClick={handleSaveCriteria} disabled={!!idError}>
                   <Save className="mr-2 h-4 w-4" />
                   Save Criteria
                 </Button>
@@ -395,6 +522,22 @@ const Criteria = () => {
           )}
         </DialogContent>
       </Dialog>
+      <footer className="border-t border-border mt-12 sm:mt-20">
+        <div className="container mx-auto px-3 sm:px-4 py-6 sm:py-8">
+          <p className="text-center text-xs sm:text-sm text-muted-foreground">
+            PSI Decision Support System &copy; {new Date().getFullYear()} •
+            Built with precision, care and ❤️ by{" "}
+            <a
+              href="https://next-portfolio-ridhoauliama97.vercel.app/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-primary font-semibold"
+            >
+              Ridho Aulia Mahqoma Angkat
+            </a>
+          </p>
+        </div>
+      </footer>
     </div>
   );
 };

@@ -146,8 +146,8 @@ const Index = () => {
                   Multi-Criteria Analysis
                 </h3>
                 <p className="text-xs sm:text-sm text-muted-foreground">
-                  Evaluate 10 key criteria including salary, location, career
-                  opportunities, and more
+                  Evaluate 10 or more key of criterias including salary,
+                  location, career opportunities, and more.
                 </p>
               </div>
               <div className="p-4 sm:p-6 rounded-xl bg-card border border-border hover:shadow-medium transition-shadow">

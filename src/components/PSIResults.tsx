@@ -24,7 +24,8 @@ import {
 } from "recharts";
 import { Trophy, Download, RotateCcw, Eye } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { Skeleton } from "@/components/ui/skeleton";
 import { DetailedCalculationView } from "./DetailedCalculationView";
 import { exportToPDF, exportToExcel, exportToCSV } from "@/utils/exportUtils";
 import { toast } from "@/hooks/use-toast";
@@ -42,6 +43,15 @@ interface PSIResultsProps {
 
 export const PSIResults = ({ result, onReset }: PSIResultsProps) => {
   const [showDetailed, setShowDetailed] = useState(false);
+  const [isCalculating, setIsCalculating] = useState(true);
+
+  useEffect(() => {
+    // Simulate calculation time for better UX
+    const timer = setTimeout(() => {
+      setIsCalculating(false);
+    }, 500);
+    return () => clearTimeout(timer);
+  }, []);
 
   const barChartData = result.rankedAlternatives.map((item) => ({
     name: item.alternative.name,
@@ -82,6 +92,60 @@ export const PSIResults = ({ result, onReset }: PSIResultsProps) => {
         result={result}
         onBack={() => setShowDetailed(false)}
       />
+    );
+  }
+
+  if (isCalculating) {
+    return (
+      <div className="space-y-6">
+        <Card className="shadow-strong border-2">
+          <CardHeader>
+            <div className="flex items-center gap-3">
+              <Skeleton className="w-12 h-12 rounded-full" />
+              <div className="space-y-2">
+                <Skeleton className="h-7 w-48" />
+                <Skeleton className="h-4 w-64" />
+              </div>
+            </div>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <Skeleton className="h-32 w-full" />
+            <div className="flex gap-3">
+              <Skeleton className="h-10 flex-1" />
+              <Skeleton className="h-10 flex-1" />
+              <Skeleton className="h-10 w-32" />
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <Skeleton className="h-6 w-32" />
+          </CardHeader>
+          <CardContent>
+            <Skeleton className="h-64 w-full" />
+          </CardContent>
+        </Card>
+
+        <div className="grid md:grid-cols-2 gap-6">
+          <Card>
+            <CardHeader>
+              <Skeleton className="h-6 w-40" />
+            </CardHeader>
+            <CardContent>
+              <Skeleton className="h-64 w-full" />
+            </CardContent>
+          </Card>
+          <Card>
+            <CardHeader>
+              <Skeleton className="h-6 w-40" />
+            </CardHeader>
+            <CardContent>
+              <Skeleton className="h-64 w-full" />
+            </CardContent>
+          </Card>
+        </div>
+      </div>
     );
   }
 

@@ -1,23 +1,32 @@
-import { useState } from 'react';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Button } from '@/components/ui/button';
-import { UserDetails } from '@/types/psi';
-import { User } from 'lucide-react';
+import { useState } from "react";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+} from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Button } from "@/components/ui/button";
+import { UserDetails } from "@/types/psi";
+import { User } from "lucide-react";
 
 interface UserDetailsFormProps {
   onSubmit: (details: UserDetails) => void;
   initialData?: UserDetails;
 }
 
-export const UserDetailsForm = ({ onSubmit, initialData }: UserDetailsFormProps) => {
+export const UserDetailsForm = ({
+  onSubmit,
+  initialData,
+}: UserDetailsFormProps) => {
   const [details, setDetails] = useState<UserDetails>(
     initialData || {
-      name: '',
-      age: '',
-      education: '',
-      location: '',
+      name: "",
+      age: "",
+      education: "",
+      location: "",
     }
   );
 
@@ -28,7 +37,8 @@ export const UserDetailsForm = ({ onSubmit, initialData }: UserDetailsFormProps)
     }
   };
 
-  const isValid = details.name && details.age && details.education && details.location;
+  const isValid =
+    details.name && details.age && details.education && details.location;
 
   return (
     <Card className="shadow-medium">
@@ -39,7 +49,9 @@ export const UserDetailsForm = ({ onSubmit, initialData }: UserDetailsFormProps)
           </div>
           <div>
             <CardTitle>User Information</CardTitle>
-            <CardDescription>Please provide your personal details</CardDescription>
+            <CardDescription>
+              Please provide your personal details
+            </CardDescription>
           </div>
         </div>
       </CardHeader>
@@ -75,7 +87,9 @@ export const UserDetailsForm = ({ onSubmit, initialData }: UserDetailsFormProps)
             <Input
               id="education"
               value={details.education}
-              onChange={(e) => setDetails({ ...details, education: e.target.value })}
+              onChange={(e) =>
+                setDetails({ ...details, education: e.target.value })
+              }
               placeholder="e.g., Bachelor's Degree in Computer Science"
               required
             />
@@ -86,17 +100,15 @@ export const UserDetailsForm = ({ onSubmit, initialData }: UserDetailsFormProps)
             <Input
               id="location"
               value={details.location}
-              onChange={(e) => setDetails({ ...details, location: e.target.value })}
+              onChange={(e) =>
+                setDetails({ ...details, location: e.target.value })
+              }
               placeholder="Enter your city/region"
               required
             />
           </div>
 
-          <Button
-            type="submit"
-            className="w-full"
-            disabled={!isValid}
-          >
+          <Button type="submit" className="w-full" disabled={!isValid}>
             Continue to Job Alternatives
           </Button>
         </form>
