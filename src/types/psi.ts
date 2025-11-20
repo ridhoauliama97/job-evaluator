@@ -1,4 +1,4 @@
-export type CriteriaType = 'Benefit' | 'Cost';
+export type CriteriaType = "Benefit" | "Cost";
 
 export interface CriteriaOption {
   label: string;
@@ -36,7 +36,11 @@ export interface PSICalculation {
 export interface PSIResult extends PSICalculation {
   userDetails: UserDetails;
   alternatives: JobAlternative[];
-  rankedAlternatives: Array<{ alternative: JobAlternative; psiValue: number; rank: number }>;
+  rankedAlternatives: Array<{
+    alternative: JobAlternative;
+    psiValue: number;
+    rank: number;
+  }>;
   timestamp: number;
 }
 
