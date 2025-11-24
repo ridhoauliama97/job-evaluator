@@ -58,7 +58,9 @@ export const UserDetailsForm = ({
       <CardContent>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-2">
-            <Label htmlFor="name">Full Name *</Label>
+            <Label htmlFor="name">
+              Full Name <span className="text-red-600">*</span>
+            </Label>
             <Input
               id="name"
               value={details.name}
@@ -69,7 +71,9 @@ export const UserDetailsForm = ({
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="age">Age *</Label>
+            <Label htmlFor="age">
+              Age <span className="text-red-600">*</span>
+            </Label>
             <Input
               id="age"
               type="number"
@@ -83,7 +87,9 @@ export const UserDetailsForm = ({
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="education">Education Level *</Label>
+            <Label htmlFor="education">
+              Education Level <span className="text-red-600">*</span>
+            </Label>
             <Input
               id="education"
               value={details.education}
@@ -96,7 +102,9 @@ export const UserDetailsForm = ({
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="location">Location *</Label>
+            <Label htmlFor="location">
+              Location <span className="text-red-600">*</span>
+            </Label>
             <Input
               id="location"
               value={details.location}
@@ -109,7 +117,7 @@ export const UserDetailsForm = ({
           </div>
 
           <Button type="submit" className="w-full" disabled={!isValid}>
-            Continue to Job Alternatives
+            Continue
           </Button>
         </form>
       </CardContent>

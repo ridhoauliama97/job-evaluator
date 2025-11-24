@@ -46,7 +46,7 @@ export const CRITERIA_DATA: Criteria[] = [
       { label: "31 s/d 50 km", value: 2 },
       { label: "21 s/d 30 km", value: 3 },
       { label: "11 s/d 20 km", value: 4 },
-      { label: "≤ 10 km", value: 5 },
+      { label: "<= 10 km", value: 5 },
     ],
   },
   {
@@ -58,7 +58,7 @@ export const CRITERIA_DATA: Criteria[] = [
       { label: "Rp. 3.000.000 s/d Rp. 4.999.999", value: 2 },
       { label: "Rp. 5.000.000 s/d Rp. 6.999.999", value: 3 },
       { label: "Rp. 7.000.000 s/d Rp. 9.999.999", value: 4 },
-      { label: "≥ Rp10.000.000", value: 5 },
+      { label: ">= Rp10.000.000", value: 5 },
     ],
   },
   {
@@ -70,12 +70,12 @@ export const CRITERIA_DATA: Criteria[] = [
       { label: "36 s/d 45 tahun", value: 2 },
       { label: "26 s/d 35 tahun", value: 3 },
       { label: "21 s/d 25 tahun", value: 4 },
-      { label: "≤ 20 tahun", value: 5 },
+      { label: "<= 20 tahun", value: 5 },
     ],
   },
   {
     id: "C7",
-    name: "Status Pekerjaan (Employment Status)",
+    name: "Status Karyawan (Employment Status)",
     type: "Benefit",
     options: [
       { label: "Freelance", value: 1 },
@@ -106,7 +106,7 @@ export const CRITERIA_DATA: Criteria[] = [
       { label: "Cukup (2.5 s/d 3.0)", value: 2 },
       { label: "Baik (3.1 s/d 3.9)", value: 3 },
       { label: "Sangat Baik (4.0 s/d 4.5)", value: 4 },
-      { label: "Unggul (≥ 4.6)", value: 5 },
+      { label: "Unggul (>= 4.6)", value: 5 },
     ],
   },
   {

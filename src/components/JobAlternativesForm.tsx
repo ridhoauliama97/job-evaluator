@@ -252,7 +252,9 @@ export const JobAlternativesForm = ({
                 </CardHeader>
                 <CardContent className="space-y-4">
                   <div className="space-y-2">
-                    <Label>Job Name *</Label>
+                    <Label>
+                      Job Name <span className="text-red-600">*</span>
+                    </Label>
                     <Input
                       value={alternative.name}
                       onChange={(e) =>
@@ -267,7 +269,8 @@ export const JobAlternativesForm = ({
                     {CRITERIA_DATA.map((criteria) => (
                       <div key={criteria.id} className="space-y-2">
                         <Label>
-                          {criteria.name} *
+                          {criteria.name}{" "}
+                          <span className="text-red-600">*</span>
                           <span className="ml-2 text-xs text-muted-foreground">
                             ({criteria.type})
                           </span>

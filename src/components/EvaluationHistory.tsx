@@ -117,6 +117,7 @@ export const EvaluationHistory = ({
                   variant="ghost"
                   size="sm"
                   onClick={() => onDelete(item.id)}
+                  className="text-destructive hover:bg-destructive/10"
                 >
                   <Trash2 className="w-4 h-4 text-destructive" />
                   <span className="ml-1 sm:hidden">Delete</span>

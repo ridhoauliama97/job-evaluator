@@ -166,8 +166,8 @@ const Index = () => {
                   Track & Compare
                 </h3>
                 <p className="text-xs sm:text-sm text-muted-foreground">
-                  Save evaluations, view history, and export reports in PDF,
-                  Excel, or CSV
+                  Save evaluations, view history, comparing results and export
+                  reports in PDF, Excel, or CSV
                 </p>
               </div>
             </div>
